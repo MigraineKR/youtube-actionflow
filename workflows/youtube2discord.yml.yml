@@ -1,0 +1,18 @@
+name: Send a Discord message when new Youtube videos update
+on:
+  youtube:
+    channel_id:
+      - UCQdjLMEXkkj9M1Q-7lxN9XA
+jobs:
+  discord:
+    name: Send a message to discord
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_KHS }}
+          DISCORD_USERNAME: ${{ secrets.DISCORD_USERNAME_KHS }}
+          DISCORD_AVATAR: ${{ secrets.DISCORD_AVATAR_KHS }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: "`대한두통학회 - YouTube`'\n'**${{on.youtube.outputs.title}}**'\n'${{on.youtube.outputs.link}}"
