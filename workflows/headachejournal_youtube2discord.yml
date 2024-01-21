@@ -12,16 +12,14 @@ jobs:
         id: prepare
         run: |
           TITLE="${{on.youtube.outputs.title}}"
-          # Replace ' and " with escaped versions
-          ESCAPED_TITLE=$(echo "$TITLE" | sed "s/'/\\\'/g" | sed 's/"/\\"/g')
+          ESCAPED_TITLE=$(echo "$TITLE" | sed 's/\\/\\\\/g' | sed 's/"/\\"/g' | sed "s/'/\\\'/g" | sed 's/\$/\\$/g' | sed 's/`/\\`/g' | sed 's/|/\\|/g' | sed 's/\?/\\?/g' | sed 's/\*/\\*/g' | sed 's/+/\\+/g' | sed 's/(/\\(/g' | sed 's/)/\\)/g' | sed 's/{/\\{/g' | sed 's/}/\\}/g' | sed 's/\[/\\[/g' | sed 's/\]/\\]/g' | sed 's/;/\\;/g' | sed 's/&/\\&/g' | sed 's/\^/\\^/g' | sed 's/%/\\%/g' | sed 's/#/\\#/g' | sed 's/@/\\@/g' | sed 's/!/\\!/g' | sed 's/</\\</g' | sed 's/>/\\>/g' | sed 's/~/\\~/g')
           echo "Escaped title: $ESCAPED_TITLE"
           echo "::set-output name=escaped_title::$ESCAPED_TITLE"
       - name: Discord notification
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_JOURNAL }}
-          DISCORD_USERNAME: ${{ secrets.DISCORD_USERNAME_JOURNAL }}
-          DISCORD_AVATAR: ${{ secrets.DISCORD_AVATAR_JOURNAL }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_USERNAME: ${{ secrets.DISCORD_USERNAME_HEADACHEJOURNAL }}
+          DISCORD_AVATAR: ${{ secrets.DISCORD_AVATAR_HEADACHEJOURNAL }}
         uses: Ilshidur/action-discord@master
         with:
           args: "`Headache Journal - YouTube`'\n'**${{steps.prepare.outputs.escaped_title}}**'\n'${{on.youtube.outputs.link}}"
-          
